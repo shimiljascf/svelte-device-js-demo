@@ -21,7 +21,7 @@ async function collectDeviceData() {
     const data = await agent.get({
       taskTimeout: 500,
       overallTimeout: 1000,
-      options: { user_ip: false }
+      options: { user_ip: false,custom_metadata: { source: "mobile-app" } }
     });
     const end = performance.now();
     sdkTime = (end - start).toFixed(2);
