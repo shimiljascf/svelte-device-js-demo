@@ -8,18 +8,23 @@ import { load } from '@cashfreepayments/deviceintel-js-sdk';
 let deviceData = null;
 let loading = false;
 let error = '';
+let sdkTime = null;
 
 async function collectDeviceData() {
   loading = true;
   error = '';
   deviceData = null;
+  sdkTime = null;
   try {
+    const start = performance.now();
     const agent = await load();
     const data = await agent.get({
       taskTimeout: 500,
       overallTimeout: 1000,
       options: { user_ip: false }
     });
+    const end = performance.now();
+    sdkTime = (end - start).toFixed(2);
     deviceData = data;
   } catch (e) {
     error = e?.message || 'Failed to collect device data.';
@@ -46,6 +51,10 @@ async function collectDeviceData() {
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold;">SDK Time (ms)</td>
+          <td style="padding:8px; border-bottom:1px solid #eee; word-break:break-word;">{sdkTime}</td>
+        </tr>
         {#each Object.entries(deviceData) as [key, value]}
           <tr>
             <td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold;">{key}</td>
